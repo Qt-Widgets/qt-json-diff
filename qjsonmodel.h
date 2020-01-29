@@ -21,7 +21,7 @@ class QJsonModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit QJsonModel(QObject *parent = 0);
+    explicit QJsonModel(QObject *parent = nullptr);
     ~QJsonModel();
     bool load(const QString& fileName);
     bool load(QIODevice * device);
@@ -37,9 +37,6 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QJsonTreeItem* itemFromIndex(const QModelIndex &index) const;
     void setIcon(const QJsonValue::Type& type, const QIcon& icon);
-
-
-
 
 private:
     QJsonTreeItem * mRootItem;

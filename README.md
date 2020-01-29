@@ -1,10 +1,10 @@
 # QT JSON diff
+
 ## Summary
+
 Some kind of diff viewer for Json (based on tree like json container/viewer widget).
 
-Actually I've created this widget for myself (that's explain little bit weird current comparison logic to search child+parent and doesn't matter what whole path is).
-
-As tester often I need to compare JSONs from different sources or simply handy viewer which able to work sometimes with really big JSONs. 
+Actually I've created this widget for myself. As tester often I need to compare JSONs from different sources or simply handy viewer which able to work sometimes with really big JSONs. 
 
 Usually online viewers are simply crashing and hanging with such data. This one viewer still able to work with such big JSONs.
 
@@ -13,11 +13,21 @@ And found this example app pretty handy as well.
 
 Some features:
 
-    - two view modes json formatted text or json tree;
-    - load json from file, url or copy paste;
+    - two view modes json formatted text or json tree (switch by "Show JSON Text/View" button);
+    - load json from file, url or copy paste (CTRL+V in treeview mode to paste JSON);
     - search through json text or json model (backward, forward, casesensitivity);
-    - compare two jsons with highlightings, sync scrolling, sync item selection;
-    - copy text of items into clipboard (key value separated by spaces).
+    - compare two jsons with highlightings, sync scrolling, sync item selection (only treeview mode);
+    - two comparison modes (switched by "Use Full Path" checkbox):
+      * follow by full path;
+      * try to find child+parent pair anywhere inside JSON (first occurrence).
+    - copy text into clipboard:
+      * **Copy Row** - item text "Name Type Value" separated by tab;
+      * **Copy Rows** - all items text separated by tab (tabs allow spreadsheet paste);
+      * **Copy Path** - path to the item in such format "name(type)->name(type)"
+           For example: root(Object)->widget(Object)->image(Object)->alignment(String);
+      * **Copy Plain Json** - copy full plain text JSON (not formatted);
+      * **Copy Pretty Json** - copy full pretty print JSON;
+      * **Copy Selected Json Value** - copy value, array or object.
 
 
 JSON Tree View
@@ -28,17 +38,55 @@ JSON Compare View
 
 <img src="https://user-images.githubusercontent.com/25594311/72466616-ea855f80-37e1-11ea-9fb5-5106b20916aa.png" width="60%"></img> 
 
-## Build from sources
-You should have preinstalled QT5 (version 5.11 if you want to use older you need to modify few lines).
-Open in QTcreator the QTjsonDiff.pro file and compile.
+## Installation
+You can get precompiled package for your OS here:
 
-Or execute commands:
+https://github.com/coozoo/qtjsondiff/releases
+
+If you prefer to compile it by yourself then see below. 
+
+
+## Build from sources
+
+You should have preinstalled QT5 (version 5.11 if you want to use older one you need to modify few lines).
+Open in QTcreator the QTjsonDiff.pro file and compile it (you will get something).
+
+### MAC OS
+
+Suppose you have installed and configured:
+  - xCode+command line tools
+  - QT (```brew install qt```)
+
+```bash
+$ cd ~
+$ mkdir proj
+$ cd proj
+$ git clone https://github.com/coozoo/qtjsondiff
+$ cd qtjsondiff
+$ chmod 777 MAC_build_RELEASE.sh
+$ ./MAC_build_RELEASE.sh
+```
+
+It will build and copy libs into app. You will find ready app inside this directory.
+
+### Linux
+
+You should have QT5 if no then install it accordingly to your distro.
+
+You can build it with QTreator or execute commands:
 ```bash
 $ git clone https://github.com/coozoo/qtjsondiff
 $ cd qtjsondiff
-$ qmake-qt5
+$ qmake-qt5 # or it can be simply qmake
 $ make
 ```
+### Windows
+
+Qt5 should be installed.
+
+git clone https://github.com/coozoo/qtjsondiff
+
+Open QTCreator and navigate to project dir. Open QTjsonDiff.pro and compile it.
 
 If you want to load jsons from https source then you need openssl. Under windows default paths for openssl are C:/OpenSSL-Win64/ and C:/OpenSSL-Win32/lib depends on platform. You can change them inside .pro file
 
@@ -86,13 +134,15 @@ Create objects and defined their properties:
 That's all pretty simple.
 
 
+## Comparison modes
 
-Current comparison behavior very slow it's searching for elements, first occurance with the same parent whenever it exists. Later I'm planning to implement comparison by exact path...
+Parent+Child pair - slow but it will find first occurance of pair and no matter how deep they're inside JSONs. It will be very slow if JSONs are significantly different.
 
-A lot of to do...
+Full Path - much faster mode (switched by default) it searches for absolute path and type. It will be faster if JSONs are significantly different.
 
-Special thanks to this projects:
+
+## Special thanks to this projects:
     
-    https://github.com/dridk/QJsonModel - I've used this model as basement. 
+    https://github.com/dridk/QJsonModel - I've used this model as basement
 
     https://github.com/probonopd/linuxdeployqt - nice tool to deploy application on linux

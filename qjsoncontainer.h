@@ -33,9 +33,9 @@
 
 class QJsonContainer : public QWidget
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-    explicit QJsonContainer(QWidget *parent=0);
+    explicit QJsonContainer(QWidget *parent=nullptr);
     ~QJsonContainer();
 
     QJsonModel *model;
@@ -44,6 +44,7 @@ public:
     QCheckBox *expandAll_Checkbox;
     void loadJson(QJsonDocument data);
     void loadJson(QString data);
+    QString getJson(QList<QModelIndex> jsonPath);
     QTreeView* getTreeView();
     QJsonModel* getJsonModel();
     QVBoxLayout *treeview_layout;
@@ -77,17 +78,24 @@ public:
     void getData();
 
 private:
-        QByteArray gUncompress(const QByteArray &data);
-        //variables to handle serach nodes in tree
-        QList<QModelIndex> currentFindIndexesList;
-        QString currentFindText;
-        int currentFindIndexId;
-        void resetCurrentFind();
-        void findTextJsonIndexHandler(bool direction);
+    QByteArray gUncompress(const QByteArray &data);
+    //variables to handle serach nodes in tree
+    QList<QModelIndex> currentFindIndexesList;
+    QString currentFindText;
+    int currentFindIndexId;
+    void resetCurrentFind();
+    void findTextJsonIndexHandler(bool direction);
+    QMenu myMenu;
+    QAction *copyRow;
+    QAction *copyRows;
+    QAction *copyPath;
+    QAction *copyJsonPlainText;
+    QAction *copyJsonPrettyText;
+    QAction *copyJsonByPath;
 
 signals:
-   void sOpenJsonFile();
-   void jsonUpdated();
+    void sOpenJsonFile();
+    void jsonUpdated();
 
 
 private slots:
@@ -106,6 +114,9 @@ private slots:
     void showContextMenu(const QPoint &point);
 public slots:
     void findText();
+
+protected:
+    bool eventFilter(QObject* obj, QEvent *event);
 
 };
 
